@@ -96,8 +96,6 @@ pub struct Config {
     // misc
     pub channel: String,
     pub quiet_tests: bool,
-    // Fallback musl-root for all targets
-    pub musl_root: Option<PathBuf>,
     pub prefix: Option<PathBuf>,
     pub docdir: Option<PathBuf>,
     pub libdir: Option<PathBuf>,
@@ -119,7 +117,6 @@ pub struct Target {
     pub cc: Option<PathBuf>,
     pub cxx: Option<PathBuf>,
     pub ndk: Option<PathBuf>,
-    pub musl_root: Option<PathBuf>,
     pub qemu_rootfs: Option<PathBuf>,
 }
 
@@ -220,7 +217,6 @@ struct Rust {
     default_linker: Option<String>,
     default_ar: Option<String>,
     channel: Option<String>,
-    musl_root: Option<String>,
     rpath: Option<bool>,
     optimize_tests: Option<bool>,
     debuginfo_tests: Option<bool>,
@@ -235,7 +231,6 @@ struct TomlTarget {
     cc: Option<String>,
     cxx: Option<String>,
     android_ndk: Option<String>,
-    musl_root: Option<String>,
     qemu_rootfs: Option<String>,
 }
 
@@ -357,7 +352,6 @@ impl Config {
             set(&mut config.channel, rust.channel.clone());
             config.rustc_default_linker = rust.default_linker.clone();
             config.rustc_default_ar = rust.default_ar.clone();
-            config.musl_root = rust.musl_root.clone().map(PathBuf::from);
 
             match rust.codegen_units {
                 Some(0) => config.rust_codegen_units = num_cpus::get() as u32,
@@ -381,7 +375,6 @@ impl Config {
                 }
                 target.cxx = cfg.cxx.clone().map(PathBuf::from);
                 target.cc = cfg.cc.clone().map(PathBuf::from);
-                target.musl_root = cfg.musl_root.clone().map(PathBuf::from);
                 target.qemu_rootfs = cfg.qemu_rootfs.clone().map(PathBuf::from);
 
                 config.target_config.insert(triple.clone(), target);
@@ -474,39 +467,6 @@ impl Config {
                 }
                 "CFG_TARGET" if value.len() > 0 => {
                     self.target.extend(value.split(" ").map(|s| s.to_string()));
-                }
-                "CFG_MUSL_ROOT" if value.len() > 0 => {
-                    self.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_X86_64" if value.len() > 0 => {
-                    let target = "x86_64-unknown-linux-musl".to_string();
-                    let target = self.target_config.entry(target)
-                                     .or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_I686" if value.len() > 0 => {
-                    let target = "i686-unknown-linux-musl".to_string();
-                    let target = self.target_config.entry(target)
-                                     .or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_ARM" if value.len() > 0 => {
-                    let target = "arm-unknown-linux-musleabi".to_string();
-                    let target = self.target_config.entry(target)
-                                     .or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_ARMHF" if value.len() > 0 => {
-                    let target = "arm-unknown-linux-musleabihf".to_string();
-                    let target = self.target_config.entry(target)
-                                     .or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_ARMV7" if value.len() > 0 => {
-                    let target = "armv7-unknown-linux-musleabihf".to_string();
-                    let target = self.target_config.entry(target)
-                                     .or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
                 }
                 "CFG_DEFAULT_AR" if value.len() > 0 => {
                     self.rustc_default_ar = Some(value.to_string());

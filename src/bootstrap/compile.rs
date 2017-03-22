@@ -78,11 +78,6 @@ pub fn std(build: &Build, target: &str, compiler: &Compiler) {
             cargo.env("JEMALLOC_OVERRIDE", jemalloc);
         }
     }
-    if target.contains("musl") {
-        if let Some(p) = build.musl_root(target) {
-            cargo.env("MUSL_ROOT", p);
-        }
-    }
 
     build.run(&mut cargo);
     update_mtime(build, &libstd_stamp(build, &compiler, target));
@@ -111,19 +106,6 @@ pub fn std_link(build: &Build,
 
     t!(fs::create_dir_all(&libdir));
     add_to_sysroot(&out_dir, &libdir);
-
-    if target.contains("musl") && !target.contains("mips") {
-        copy_musl_third_party_objects(build, target, &libdir);
-    }
-}
-
-/// Copies the crt(1,i,n).o startup objects
-///
-/// Only required for musl targets that statically link to libc
-fn copy_musl_third_party_objects(build: &Build, target: &str, into: &Path) {
-    for &obj in &["crt1.o", "crti.o", "crtn.o"] {
-        copy(&build.musl_root(target).unwrap().join("lib").join(obj), &into.join(obj));
-    }
 }
 
 /// Build and prepare startup objects like rsbegin.o and rsend.o

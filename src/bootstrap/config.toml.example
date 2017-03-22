@@ -265,12 +265,6 @@
 # build native code.
 #android-ndk = "/path/to/ndk"
 
-# The root location of the MUSL installation directory. The library directory
-# will also need to contain libunwind.a for an unwinding implementation. Note
-# that this option only makes sense for MUSL targets that produce statically
-# linked binaries
-#musl-root = "..."
-
 # =============================================================================
 # Distribution options
 #
