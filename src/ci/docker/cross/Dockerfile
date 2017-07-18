@@ -49,13 +49,10 @@ ENV TARGETS=$TARGETS,armv7-unknown-linux-musleabihf
 ENV TARGETS=$TARGETS,sparc64-unknown-linux-gnu
 ENV TARGETS=$TARGETS,x86_64-unknown-redox
 
-ENV CC_mipsel_unknown_linux_musl=mipsel-openwrt-linux-gcc \
-    CC_mips_unknown_linux_musl=mips-openwrt-linux-gcc \
+ENV CC_mipsel_unknown_linux_musl=mipsel-linux-musl-gcc \
+    CC_mips_unknown_linux_musl=mips-linux-musl-gcc \
     CC_sparc64_unknown_linux_gnu=sparc64-linux-gnu-gcc \
     CC_x86_64_unknown_redox=x86_64-unknown-redox-gcc
-
-# Suppress some warnings in the openwrt toolchains we downloaded
-ENV STAGING_DIR=/tmp
 
 ENV RUST_CONFIGURE_ARGS \
       --enable-extended \
