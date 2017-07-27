@@ -88,6 +88,11 @@ impl Step for Std {
         println!("Building stage{} std artifacts ({} -> {})", compiler.stage,
                 &compiler.host, target);
 
+        if target.contains("musl") {
+            let libdir = builder.sysroot_libdir(compiler, target);
+            copy_musl_third_party_objects(build, target, &libdir);
+        }
+
         let out_dir = build.cargo_out(compiler, Mode::Libstd, target);
         build.clear_if_dirty(&out_dir, &builder.rustc(compiler));
         let mut cargo = builder.cargo(compiler, Mode::Libstd, target, "build");
@@ -101,6 +106,20 @@ impl Step for Std {
             target_compiler: compiler,
             target: target,
         });
+    }
+}
+
+/// Copies the crt(1,i,n).o startup objects
+///
+/// Since musl supports fully static linking, we can cross link for it even
+/// with a glibc-targeting toolchain, given we have the appropriate startup
+/// files. As those shipped with glibc won't work, copy the ones provided by
+/// musl so we have them on linux-gnu hosts.
+fn copy_musl_third_party_objects(build: &Build,
+                                 target: Interned<String>,
+                                 into: &Path) {
+    for &obj in &["crt1.o", "crti.o", "crtn.o"] {
+        copy(&build.musl_root(target).unwrap().join("lib").join(obj), &into.join(obj));
     }
 }
 
@@ -188,28 +207,12 @@ impl Step for StdLink {
         let libdir = builder.sysroot_libdir(target_compiler, target);
         add_to_sysroot(&libdir, &libstd_stamp(build, compiler, target));
 
-        if target.contains("musl") {
-            copy_musl_third_party_objects(build, target, &libdir);
-        }
-
         if build.config.sanitizers && compiler.stage != 0 && target == "x86_64-apple-darwin" {
             // The sanitizers are only built in stage1 or above, so the dylibs will
             // be missing in stage0 and causes panic. See the `std()` function above
             // for reason why the sanitizers are not built in stage0.
             copy_apple_sanitizer_dylibs(&build.native_dir(target), "osx", &libdir);
         }
-    }
-}
-
-/// Copies the crt(1,i,n).o startup objects
-///
-/// Since musl supports fully static linking, we can cross link for it even
-/// with a glibc-targeting toolchain, given we have the appropriate startup
-/// files. As those shipped with glibc won't work, copy the ones provided by
-/// musl so we have them on linux-gnu hosts.
-fn copy_musl_third_party_objects(build: &Build, target: Interned<String>, into: &Path) {
-    for &obj in &["crt1.o", "crti.o", "crtn.o"] {
-        copy(&build.musl_root(target).unwrap().join("lib").join(obj), &into.join(obj));
     }
 }
 
