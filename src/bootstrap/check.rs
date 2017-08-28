@@ -590,10 +590,20 @@ impl Step for Compiletest {
 
         let mut hostflags = build.rustc_flags(compiler.host);
         hostflags.extend(flags.clone());
+        match build.crt_static(compiler.host) {
+            Some(true) => { hostflags.push("-Ctarget-feature=+crt-static".to_owned()); }
+            Some(false) => { hostflags.push("-Ctarget-feature=-crt-static".to_owned()); }
+            None => {}
+        }
         cmd.arg("--host-rustcflags").arg(hostflags.join(" "));
 
         let mut targetflags = build.rustc_flags(target);
         targetflags.extend(flags);
+        match build.crt_static(target) {
+            Some(true) => { targetflags.push("-Ctarget-feature=+crt-static".to_owned()); }
+            Some(false) => { targetflags.push("-Ctarget-feature=-crt-static".to_owned()); }
+            None => {}
+        }
         targetflags.push(format!("-Lnative={}",
                                  build.test_helpers_out(target).display()));
         cmd.arg("--target-rustcflags").arg(targetflags.join(" "));
