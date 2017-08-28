@@ -1293,6 +1293,13 @@ actual:\n\
 
             if let Some(crate_type) = crate_type {
                 aux_rustc.args(&["--crate-type", crate_type]);
+                // To generate dynamic libraries on musl, we must link libc dynamically as well.
+                match (crate_type) {
+                    "dylib" | "proc-macro" if self.config.target.contains("musl") {
+                        aux_rustc.arg(&["-C", "target-feature=-crt-static"]);
+                    }
+                    _ => {}
+                }
             }
 
             aux_rustc.arg("-L").arg(&aux_dir);
