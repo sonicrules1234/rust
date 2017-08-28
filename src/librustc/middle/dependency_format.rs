@@ -115,7 +115,8 @@ fn calculate_type<'a, 'tcx>(tcx: TyCtxt<'a, 'tcx, 'tcx>,
     match ty {
         // If the global prefer_dynamic switch is turned off, first attempt
         // static linkage (this can fail).
-        config::CrateTypeExecutable if !sess.opts.cg.prefer_dynamic => {
+        config::CrateTypeExecutable if !sess.opts.cg.prefer_dynamic ||
+            (sess.crt_static() && !sess.target.target.options.crt_static_allows_dylibs) => {
             if let Some(v) = attempt_static(tcx) {
                 return v;
             }
