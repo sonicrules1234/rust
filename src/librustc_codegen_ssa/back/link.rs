@@ -1642,9 +1642,7 @@ fn add_upstream_rust_crates<'a, B: ArchiveBuilder<'a>>(
     }
 }
 
-// Link in all of our upstream crates' native dependencies. Remember that
-// all of these upstream native dependencies are all non-static
-// dependencies. We've got two cases then:
+// Link in all of our upstream crates' native dependencies. We have two cases:
 //
 // 1. The upstream crate is an rlib. In this case we *must* link in the
 // native dependency because the rlib is just an archive.
@@ -1693,7 +1691,19 @@ pub fn add_upstream_native_libraries(
                 continue;
             }
             match lib.kind {
-                NativeLibraryKind::NativeUnknown => cmd.link_dylib(name),
+                NativeLibraryKind::NativeUnknown => {
+                    // On some targets, like Linux, linking a static executable inhibits using
+                    // dylibs at all. Force native libraries to be static, even if for example
+                    // an upstream rlib was originally linked against a native shared library.
+                    if crate_type == config::CrateType::Executable
+                        && sess.crt_static()
+                        && !sess.target.target.options.crt_static_allows_dylibs
+                    {
+                        cmd.link_staticlib(name)
+                    } else {
+                        cmd.link_dylib(name)
+                    }
+                },
                 NativeLibraryKind::NativeFramework => cmd.link_framework(name),
                 NativeLibraryKind::NativeStaticNobundle => {
                     // Link "static-nobundle" native libs only if the crate they originate from
