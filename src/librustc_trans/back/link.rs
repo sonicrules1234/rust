@@ -1346,8 +1346,8 @@ fn add_upstream_rust_crates(cmd: &mut Linker,
     }
 }
 
-// Link in all of our upstream crates' native dependencies. Remember that
-// all of these upstream native dependencies are all non-static
+// Link in all of our upstream crates' native dependencies. Remember that when
+// linking libraries, these upstream native dependencies are all non-static
 // dependencies. We've got two cases then:
 //
 // 1. The upstream crate is an rlib. In this case we *must* link in the
@@ -1387,7 +1387,14 @@ fn add_upstream_native_libraries(cmd: &mut Linker,
                 continue
             }
             match lib.kind {
-                NativeLibraryKind::NativeUnknown => cmd.link_dylib(&lib.name.as_str()),
+                NativeLibraryKind::NativeUnknown => {
+                    // When creating executables, match library linkage to that of the executable.
+                    if crate_type == config::CrateTypeExecutable && sess.crt_static() {
+                        cmd.link_staticlib(&lib.name.as_str())
+                    } else {
+                        cmd.link_dylib(&lib.name.as_str())
+                    }
+                },
                 NativeLibraryKind::NativeFramework => cmd.link_framework(&lib.name.as_str()),
                 NativeLibraryKind::NativeStaticNobundle => {
                     // Link "static-nobundle" native libs only if the crate they originate from
