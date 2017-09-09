@@ -90,12 +90,6 @@ ENV CC_mipsel_unknown_linux_musl=mipsel-openwrt-linux-gcc \
 
 ENV RUST_CONFIGURE_ARGS \
       --target=$TARGETS \
-      --musl-root-arm=/musl-arm \
-      --musl-root-armhf=/musl-armhf \
-      --musl-root-armv7=/musl-armv7 \
-      --musl-root-aarch64=/musl-aarch64 \
-      --musl-root-mips=/musl-mips \
-      --musl-root-mipsel=/musl-mipsel \
       --enable-emscripten
 
 ENV SCRIPT python2.7 ../x.py dist --target $TARGETS
