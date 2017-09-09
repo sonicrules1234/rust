@@ -751,14 +751,6 @@ impl Build {
         }
     }
 
-    /// Returns the "musl root" for this `target`, if defined
-    fn musl_root(&self, target: Interned<String>) -> Option<&Path> {
-        self.config.target_config.get(&target)
-            .and_then(|t| t.musl_root.as_ref())
-            .or(self.config.musl_root.as_ref())
-            .map(|p| &**p)
-    }
-
     /// Returns true if this is a no-std `target`, if defined
     fn no_std(&self, target: Interned<String>) -> Option<bool> {
         self.config.target_config.get(&target)

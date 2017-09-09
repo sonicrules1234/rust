@@ -78,24 +78,12 @@ impl Step for Std {
             });
             builder.info(&format!("Uplifting stage1 std ({} -> {})", from.host, target));
 
-            // Even if we're not building std this stage, the new sysroot must
-            // still contain the musl startup objects.
-            if target.contains("musl") {
-                let libdir = builder.sysroot_libdir(compiler, target);
-                copy_musl_third_party_objects(builder, target, &libdir);
-            }
-
             builder.ensure(StdLink {
                 compiler: from,
                 target_compiler: compiler,
                 target,
             });
             return;
-        }
-
-        if target.contains("musl") {
-            let libdir = builder.sysroot_libdir(compiler, target);
-            copy_musl_third_party_objects(builder, target, &libdir);
         }
 
         let out_dir = builder.cargo_out(compiler, Mode::Libstd, target);
@@ -116,20 +104,6 @@ impl Step for Std {
             target_compiler: compiler,
             target,
         });
-    }
-}
-
-/// Copies the crt(1,i,n).o startup objects
-///
-/// Since musl supports fully static linking, we can cross link for it even
-/// with a glibc-targeting toolchain, given we have the appropriate startup
-/// files. As those shipped with glibc won't work, copy the ones provided by
-/// musl so we have them on linux-gnu hosts.
-fn copy_musl_third_party_objects(builder: &Builder,
-                                 target: Interned<String>,
-                                 into: &Path) {
-    for &obj in &["crt1.o", "crti.o", "crtn.o"] {
-        builder.copy(&builder.musl_root(target).unwrap().join("lib").join(obj), &into.join(obj));
     }
 }
 
@@ -185,11 +159,6 @@ pub fn std_cargo(builder: &Builder,
         if let Some(target) = builder.config.target_config.get(&target) {
             if let Some(ref jemalloc) = target.jemalloc {
                 cargo.env("JEMALLOC_OVERRIDE", jemalloc);
-            }
-        }
-        if target.contains("musl") {
-            if let Some(p) = builder.musl_root(target) {
-                cargo.env("MUSL_ROOT", p);
             }
         }
     }
