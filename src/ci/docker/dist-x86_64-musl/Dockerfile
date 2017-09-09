@@ -30,7 +30,6 @@ COPY scripts/sccache.sh /scripts/
 RUN sh /scripts/sccache.sh
 
 ENV RUST_CONFIGURE_ARGS \
-      --musl-root-x86_64=/musl-x86_64 \
       --enable-extended \
       --disable-docs
 

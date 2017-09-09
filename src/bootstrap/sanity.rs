@@ -21,7 +21,7 @@
 use std::collections::HashMap;
 use std::env;
 use std::ffi::{OsString, OsStr};
-use std::fs::{self, File};
+use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
 use std::process::Command;
@@ -183,34 +183,6 @@ pub fn check(build: &mut Build) {
 
             if build.no_std(*target) == Some(false) {
                 panic!("All the *-none-* targets are no-std targets")
-            }
-        }
-
-        // Make sure musl-root is valid
-        if target.contains("musl") {
-            // If this is a native target (host is also musl) and no musl-root is given,
-            // fall back to the system toolchain in /usr before giving up
-            if build.musl_root(*target).is_none() && build.config.build == *target {
-                let target = build.config.target_config.entry(target.clone())
-                                 .or_insert(Default::default());
-                target.musl_root = Some("/usr".into());
-            }
-            match build.musl_root(*target) {
-                Some(root) => {
-                    if fs::metadata(root.join("lib/libc.a")).is_err() {
-                        panic!("couldn't find libc.a in musl dir: {}",
-                               root.join("lib").display());
-                    }
-                    if fs::metadata(root.join("lib/libunwind.a")).is_err() {
-                        panic!("couldn't find libunwind.a in musl dir: {}",
-                               root.join("lib").display());
-                    }
-                }
-                None => {
-                    panic!("when targeting MUSL either the rust.musl-root \
-                            option or the target.$TARGET.musl-root option must \
-                            be specified in config.toml")
-                }
             }
         }
 
