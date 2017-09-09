@@ -61,11 +61,7 @@ ENV STAGING_DIR=/tmp
 
 ENV RUST_CONFIGURE_ARGS \
       --enable-extended \
-      --target=$TARGETS \
-      --musl-root-arm=/usr/local/arm-linux-musleabi \
-      --musl-root-armhf=/usr/local/arm-linux-musleabihf \
-      --musl-root-armv7=/usr/local/armv7-linux-musleabihf \
-      --musl-root-aarch64=/usr/local/aarch64-linux-musl
+      --target=$TARGETS
 ENV SCRIPT python2.7 ../x.py dist --target $TARGETS
 
 # sccache
