@@ -30,7 +30,6 @@ RUN sh /scripts/sccache.sh
 
 ENV RUST_CONFIGURE_ARGS \
       --target=i686-unknown-linux-musl,i586-unknown-linux-gnu \
-      --musl-root-i686=/musl-i686 \
       --enable-extended
 
 # Newer binutils broke things on some vms/distros (i.e., linking against
