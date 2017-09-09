@@ -128,16 +128,7 @@ fn copy_third_party_objects(
 
     // Copies the crt(1,i,n).o startup objects
     //
-    // Since musl supports fully static linking, we can cross link for it even
-    // with a glibc-targeting toolchain, given we have the appropriate startup
-    // files. As those shipped with glibc won't work, copy the ones provided by
-    // musl so we have them on linux-gnu hosts.
-    if target.contains("musl") {
-        let srcdir = builder.musl_root(target).unwrap().join("lib");
-        for &obj in &["crt1.o", "crti.o", "crtn.o"] {
-            copy_and_stamp(&srcdir, obj);
-        }
-    } else if target.ends_with("-wasi") {
+    if target.ends_with("-wasi") {
         let srcdir = builder.wasi_root(target).unwrap().join("lib/wasm32-wasi");
         copy_and_stamp(&srcdir, "crt1.o");
     }
@@ -212,15 +203,6 @@ pub fn std_cargo(builder: &Builder<'_>, target: Interned<String>, cargo: &mut Ca
             .arg(features)
             .arg("--manifest-path")
             .arg(builder.src.join("src/libtest/Cargo.toml"));
-
-        // Help the libc crate compile by assisting it in finding various
-        // sysroot native libraries.
-        if target.contains("musl") {
-            if let Some(p) = builder.musl_root(target) {
-                let root = format!("native={}/lib", p.to_str().unwrap());
-                cargo.rustflag("-L").rustflag(&root);
-            }
-        }
 
         if target.ends_with("-wasi") {
             if let Some(p) = builder.wasi_root(target) {

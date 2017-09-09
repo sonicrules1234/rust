@@ -833,16 +833,6 @@ impl Build {
         }
     }
 
-    /// Returns the "musl root" for this `target`, if defined
-    fn musl_root(&self, target: Interned<String>) -> Option<&Path> {
-        self.config
-            .target_config
-            .get(&target)
-            .and_then(|t| t.musl_root.as_ref())
-            .or(self.config.musl_root.as_ref())
-            .map(|p| &**p)
-    }
-
     /// Returns the sysroot for the wasi target, if defined
     fn wasi_root(&self, target: Interned<String>) -> Option<&Path> {
         self.config.target_config.get(&target).and_then(|t| t.wasi_root.as_ref()).map(|p| &**p)
