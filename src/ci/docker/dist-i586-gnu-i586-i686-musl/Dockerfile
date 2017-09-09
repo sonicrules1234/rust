@@ -30,8 +30,6 @@ COPY scripts/sccache.sh /scripts/
 RUN sh /scripts/sccache.sh
 
 ENV RUST_CONFIGURE_ARGS \
-      --musl-root-i586=/musl-i586 \
-      --musl-root-i686=/musl-i686 \
       --enable-extended \
       --disable-docs
 
