@@ -61,21 +61,6 @@ pub(super) fn all(obj: &str) -> CrtObjects {
     ])
 }
 
-pub(super) fn pre_musl_fallback() -> CrtObjects {
-    new(&[
-        (LinkOutputKind::DynamicNoPicExe, &["crt1.o", "crti.o"]),
-        (LinkOutputKind::DynamicPicExe, &["Scrt1.o", "crti.o"]),
-        (LinkOutputKind::StaticNoPicExe, &["crt1.o", "crti.o"]),
-        (LinkOutputKind::StaticPicExe, &["rcrt1.o", "crti.o"]),
-        (LinkOutputKind::DynamicDylib, &["crti.o"]),
-        (LinkOutputKind::StaticDylib, &["crti.o"]),
-    ])
-}
-
-pub(super) fn post_musl_fallback() -> CrtObjects {
-    all("crtn.o")
-}
-
 pub(super) fn pre_mingw_fallback() -> CrtObjects {
     new(&[
         (LinkOutputKind::DynamicNoPicExe, &["crt2.o", "rsbegin.o"]),
