@@ -31,7 +31,6 @@ RUN sh /scripts/sccache.sh
 ENV HOSTS=x86_64-unknown-linux-musl
 
 ENV RUST_CONFIGURE_ARGS \
-      --musl-root-x86_64=/usr/local/x86_64-linux-musl \
       --enable-extended \
       --disable-docs \
       --set target.x86_64-unknown-linux-musl.crt-static=false \
