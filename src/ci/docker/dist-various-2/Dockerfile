@@ -107,7 +107,6 @@ ENV X86_FORTANIX_SGX_LIBS="/x86_64-fortanix-unknown-sgx/lib/"
 RUN ln -s /usr/include/asm-generic /usr/local/include/asm
 
 ENV RUST_CONFIGURE_ARGS --enable-extended --enable-lld --disable-docs \
-  --set target.wasm32-wasi.wasi-root=/wasm32-wasi \
-  --musl-root-armv7=/musl-armv7
+  --set target.wasm32-wasi.wasi-root=/wasm32-wasi
 
 ENV SCRIPT python2.7 ../x.py dist --target $TARGETS
