@@ -894,14 +894,6 @@ impl Build {
         }
     }
 
-    /// Returns the "musl root" for this `target`, if defined
-    fn musl_root(&self, target: &str) -> Option<&Path> {
-        self.config.target_config.get(target)
-            .and_then(|t| t.musl_root.as_ref())
-            .or(self.config.musl_root.as_ref())
-            .map(|p| &**p)
-    }
-
     /// Returns whether the target will be tested using the `remote-test-client`
     /// and `remote-test-server` binaries.
     fn remote_tested(&self, target: &str) -> bool {

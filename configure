@@ -481,12 +481,6 @@ valopt armv7-linux-androideabi-ndk "" "armv7-linux-androideabi NDK standalone pa
 valopt aarch64-linux-android-ndk "" "aarch64-linux-android NDK standalone path"
 valopt x86_64-linux-android-ndk "" "x86_64-linux-android NDK standalone path"
 valopt nacl-cross-path  "" "NaCl SDK path (Pepper Canary is recommended). Must be absolute!"
-valopt musl-root "/usr/local" "MUSL root installation directory (deprecated)"
-valopt musl-root-x86_64 "" "x86_64-unknown-linux-musl install directory"
-valopt musl-root-i686 "" "i686-unknown-linux-musl install directory"
-valopt musl-root-arm "" "arm-unknown-linux-musleabi install directory"
-valopt musl-root-armhf "" "arm-unknown-linux-musleabihf install directory"
-valopt musl-root-armv7 "" "armv7-unknown-linux-musleabihf install directory"
 valopt extra-filename "" "Additional data that is hashed and passed to the -C extra-filename flag"
 valopt qemu-armhf-rootfs "" "rootfs in qemu testing, you probably don't want to use this"
 

@@ -30,7 +30,6 @@
 extern crate bootstrap;
 
 use std::env;
-use std::ffi::OsString;
 use std::io;
 use std::io::prelude::*;
 use std::str::FromStr;
@@ -123,15 +122,6 @@ fn main() {
         // set for more details.
         if env::var_os("RUSTBUILD_UNSTABLE").is_some() {
             cmd.arg("--cfg").arg("rustbuild");
-        }
-
-        // Help the libc crate compile by assisting it in finding the MUSL
-        // native libraries.
-        if let Some(s) = env::var_os("MUSL_ROOT") {
-            let mut root = OsString::from("native=");
-            root.push(&s);
-            root.push("/lib");
-            cmd.arg("-L").arg(&root);
         }
 
         // Pass down extra flags, commonly used to configure `-Clinker` when
