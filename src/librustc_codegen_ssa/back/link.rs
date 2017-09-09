@@ -1288,16 +1288,12 @@ fn link_output_kind(sess: &Session, crate_type: CrateType) -> LinkOutputKind {
 
 /// Whether we link to our own CRT objects instead of relying on gcc to pull them.
 /// We only provide such support for a very limited number of targets.
-fn crt_objects_fallback(sess: &Session, crate_type: CrateType) -> bool {
+fn crt_objects_fallback(sess: &Session, _crate_type: CrateType) -> bool {
     if let Some(self_contained) = sess.opts.debugging_opts.link_self_contained {
         return self_contained;
     }
 
     match sess.target.target.options.crt_objects_fallback {
-        // FIXME: Find a better heuristic for "native musl toolchain is available",
-        // based on host and linker path, for example.
-        // (https://github.com/rust-lang/rust/pull/71769#issuecomment-626330237).
-        Some(CrtObjectsFallback::Musl) => sess.crt_static(Some(crate_type)),
         // FIXME: Find some heuristic for "native mingw toolchain is available",
         // likely based on `get_crt_libs_path` (https://github.com/rust-lang/rust/pull/67429).
         Some(CrtObjectsFallback::Mingw) => {
