@@ -31,6 +31,6 @@ mod libunwind;
 pub use libunwind::*;
 
 #[cfg(all(target_env = "musl", not(target_arch = "mips")))]
-#[link(name = "unwind", kind = "static", cfg(target_feature = "crt-static"))]
+#[link(name = "gcc_eh", cfg(target_feature = "crt-static"))]
 #[link(name = "gcc_s", cfg(not(target_feature = "crt-static")))]
 extern {}
