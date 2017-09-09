@@ -89,12 +89,6 @@ ENV CC_mipsel_unknown_linux_musl=mipsel-openwrt-linux-gcc \
     CFLAGS_armv5te_unknown_linux_gnueabi="-march=armv5te -marm -mfloat-abi=soft"
 
 ENV RUST_CONFIGURE_ARGS \
-      --musl-root-arm=/musl-arm \
-      --musl-root-armhf=/musl-armhf \
-      --musl-root-armv7=/musl-armv7 \
-      --musl-root-aarch64=/musl-aarch64 \
-      --musl-root-mips=/musl-mips \
-      --musl-root-mipsel=/musl-mipsel \
       --enable-emscripten \
       --disable-docs
 

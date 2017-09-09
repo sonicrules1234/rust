@@ -124,8 +124,6 @@ pub struct Config {
     pub save_toolstates: Option<PathBuf>,
     pub print_step_timings: bool,
 
-    // Fallback musl-root for all targets
-    pub musl_root: Option<PathBuf>,
     pub prefix: Option<PathBuf>,
     pub sysconfdir: Option<PathBuf>,
     pub datadir: Option<PathBuf>,
@@ -157,7 +155,6 @@ pub struct Target {
     pub linker: Option<PathBuf>,
     pub ndk: Option<PathBuf>,
     pub crt_static: Option<bool>,
-    pub musl_root: Option<PathBuf>,
     pub qemu_rootfs: Option<PathBuf>,
 }
 
@@ -283,7 +280,6 @@ struct Rust {
     backtrace: Option<bool>,
     default_linker: Option<String>,
     channel: Option<String>,
-    musl_root: Option<String>,
     rpath: Option<bool>,
     optimize_tests: Option<bool>,
     debuginfo_tests: Option<bool>,
@@ -312,7 +308,6 @@ struct TomlTarget {
     linker: Option<String>,
     android_ndk: Option<String>,
     crt_static: Option<bool>,
-    musl_root: Option<String>,
     qemu_rootfs: Option<String>,
 }
 
@@ -491,7 +486,6 @@ impl Config {
             set(&mut config.lld_enabled, rust.lld);
             config.rustc_parallel_queries = rust.experimental_parallel_queries.unwrap_or(false);
             config.rustc_default_linker = rust.default_linker.clone();
-            config.musl_root = rust.musl_root.clone().map(PathBuf::from);
             config.save_toolstates = rust.save_toolstates.clone().map(PathBuf::from);
 
             if let Some(ref backends) = rust.codegen_backends {
@@ -527,7 +521,6 @@ impl Config {
                 target.ar = cfg.ar.clone().map(PathBuf::from);
                 target.linker = cfg.linker.clone().map(PathBuf::from);
                 target.crt_static = cfg.crt_static.clone();
-                target.musl_root = cfg.musl_root.clone().map(PathBuf::from);
                 target.qemu_rootfs = cfg.qemu_rootfs.clone().map(PathBuf::from);
 
                 config.target_config.insert(INTERNER.intern_string(triple.clone()), target);
