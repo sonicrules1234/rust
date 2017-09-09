@@ -41,8 +41,6 @@ fn cc2ar(cc: &Path, target: &str) -> Option<PathBuf> {
         Some(PathBuf::from(ar))
     } else if target.contains("msvc") {
         None
-    } else if target.contains("musl") {
-        Some(PathBuf::from("ar"))
     } else if target.contains("openbsd") {
         Some(PathBuf::from("ar"))
     } else if target.contains("vxworks") {
@@ -86,7 +84,7 @@ pub fn find(build: &mut Build) {
         if let Some(cc) = config.and_then(|c| c.cc.as_ref()) {
             cfg.compiler(cc);
         } else {
-            set_compiler(&mut cfg, Language::C, target, config, build);
+            set_compiler(&mut cfg, Language::C, target, config);
         }
 
         let compiler = cfg.get_compiler();
@@ -109,7 +107,7 @@ pub fn find(build: &mut Build) {
             cfg.compiler(cxx);
             true
         } else if build.hosts.contains(&target) || build.build == target {
-            set_compiler(&mut cfg, Language::CPlusPlus, target, config, build);
+            set_compiler(&mut cfg, Language::CPlusPlus, target, config);
             true
         } else {
             false
@@ -136,8 +134,7 @@ pub fn find(build: &mut Build) {
 fn set_compiler(cfg: &mut cc::Build,
                 compiler: Language,
                 target: Interned<String>,
-                config: Option<&Target>,
-                build: &Build) {
+                config: Option<&Target>) {
     match &*target {
         // When compiling for android we may have the NDK configured in the
         // config.toml in which case we look there. Otherwise the default
@@ -174,26 +171,6 @@ fn set_compiler(cfg: &mut cc::Build,
             let alternative = format!("e{}", gnu_compiler);
             if Command::new(&alternative).output().is_ok() {
                 cfg.compiler(alternative);
-            }
-        }
-
-        "mips-unknown-linux-musl" => {
-            if cfg.get_compiler().path().to_str() == Some("gcc") {
-                cfg.compiler("mips-linux-musl-gcc");
-            }
-        }
-        "mipsel-unknown-linux-musl" => {
-            if cfg.get_compiler().path().to_str() == Some("gcc") {
-                cfg.compiler("mipsel-linux-musl-gcc");
-            }
-        }
-
-        t if t.contains("musl") => {
-            if let Some(root) = build.musl_root(target) {
-                let guess = root.join("bin/musl-gcc");
-                if guess.exists() {
-                    cfg.compiler(guess);
-                }
             }
         }
 

@@ -146,15 +146,6 @@ ENV CC_mipsel_unknown_linux_musl=mipsel-openwrt-linux-gcc \
     CXX_thumbv7neon_unknown_linux_gnueabihf=arm-linux-gnueabihf-g++
 
 ENV RUST_CONFIGURE_ARGS \
-      --musl-root-armv5te=/musl-armv5te \
-      --musl-root-arm=/musl-arm \
-      --musl-root-armhf=/musl-armhf \
-      --musl-root-armv7hf=/musl-armv7hf \
-      --musl-root-aarch64=/musl-aarch64 \
-      --musl-root-mips=/musl-mips \
-      --musl-root-mipsel=/musl-mipsel \
-      --musl-root-mips64=/musl-mips64 \
-      --musl-root-mips64el=/musl-mips64el \
       --disable-docs
 
 ENV SCRIPT \
