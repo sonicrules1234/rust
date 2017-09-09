@@ -114,21 +114,6 @@ impl Step for Std {
 fn copy_third_party_objects(builder: &Builder<'_>, compiler: &Compiler, target: Interned<String>) {
     let libdir = builder.sysroot_libdir(*compiler, target);
 
-    // Copies the crt(1,i,n).o startup objects
-    //
-    // Since musl supports fully static linking, we can cross link for it even
-    // with a glibc-targeting toolchain, given we have the appropriate startup
-    // files. As those shipped with glibc won't work, copy the ones provided by
-    // musl so we have them on linux-gnu hosts.
-    if target.contains("musl") {
-        for &obj in &["crt1.o", "crti.o", "crtn.o"] {
-            builder.copy(
-                &builder.musl_root(target).unwrap().join("lib").join(obj),
-                &libdir.join(obj),
-            );
-        }
-    }
-
     // Copies libunwind.a compiled to be linked wit x86_64-fortanix-unknown-sgx.
     //
     // This target needs to be linked to Fortanix's port of llvm's libunwind.
@@ -182,12 +167,6 @@ pub fn std_cargo(builder: &Builder<'_>,
         cargo.arg("--features").arg(features)
             .arg("--manifest-path")
             .arg(builder.src.join("src/libstd/Cargo.toml"));
-
-        if target.contains("musl") {
-            if let Some(p) = builder.musl_root(target) {
-                cargo.env("MUSL_ROOT", p);
-            }
-        }
     }
 }
 
