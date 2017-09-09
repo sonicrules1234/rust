@@ -113,8 +113,6 @@ pub struct Config {
     pub channel: String,
     pub quiet_tests: bool,
     pub test_miri: bool,
-    // Fallback musl-root for all targets
-    pub musl_root: Option<PathBuf>,
     pub prefix: Option<PathBuf>,
     pub sysconfdir: Option<PathBuf>,
     pub docdir: Option<PathBuf>,
@@ -146,7 +144,6 @@ pub struct Target {
     pub cxx: Option<PathBuf>,
     pub ndk: Option<PathBuf>,
     pub crt_static: Option<bool>,
-    pub musl_root: Option<PathBuf>,
     pub qemu_rootfs: Option<PathBuf>,
 }
 
@@ -264,7 +261,6 @@ struct Rust {
     default_linker: Option<String>,
     default_ar: Option<String>,
     channel: Option<String>,
-    musl_root: Option<String>,
     rpath: Option<bool>,
     optimize_tests: Option<bool>,
     debuginfo_tests: Option<bool>,
@@ -286,7 +282,6 @@ struct TomlTarget {
     cxx: Option<String>,
     android_ndk: Option<String>,
     crt_static: Option<bool>,
-    musl_root: Option<String>,
     qemu_rootfs: Option<String>,
 }
 
@@ -465,7 +460,6 @@ impl Config {
             set(&mut config.test_miri, rust.test_miri);
             config.rustc_default_linker = rust.default_linker.clone();
             config.rustc_default_ar = rust.default_ar.clone();
-            config.musl_root = rust.musl_root.clone().map(PathBuf::from);
 
             match rust.codegen_units {
                 Some(0) => config.rust_codegen_units = num_cpus::get() as u32,
@@ -490,7 +484,6 @@ impl Config {
                 target.cxx = cfg.cxx.clone().map(PathBuf::from);
                 target.cc = cfg.cc.clone().map(PathBuf::from);
                 target.crt_static = cfg.crt_static.clone();
-                target.musl_root = cfg.musl_root.clone().map(PathBuf::from);
                 target.qemu_rootfs = cfg.qemu_rootfs.clone().map(PathBuf::from);
 
                 config.target_config.insert(INTERNER.intern_string(triple.clone()), target);
