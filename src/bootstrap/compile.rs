@@ -82,29 +82,10 @@ pub fn std(build: &Build, target: &str, compiler: &Compiler) {
             cargo.env("JEMALLOC_OVERRIDE", jemalloc);
         }
     }
-    if target.contains("musl") {
-        if let Some(p) = build.musl_root(target) {
-            cargo.env("MUSL_ROOT", p);
-            let libdir = build.sysroot_libdir(compiler, target);
-            copy_musl_third_party_objects(build, target, &libdir);
-        }
-    }
 
     run_cargo(build,
               &mut cargo,
               &libstd_stamp(build, &compiler, target));
-}
-
-/// Copies the crt(1,i,n).o startup objects
-///
-/// Since musl supports fully static linking, we can cross link for it even
-/// with a glibc-targeting toolchain, given we have the appropriate startup
-/// files. As those shipped with glibc won't work, copy the ones provided by
-/// musl so we have them on linux-gnu hosts.
-fn copy_musl_third_party_objects(build: &Build, target: &str, into: &Path) {
-    for &obj in &["crt1.o", "crti.o", "crtn.o"] {
-        copy(&build.musl_root(target).unwrap().join("lib").join(obj), &into.join(obj));
-    }
 }
 
 /// Link all libstd rlibs/dylibs into the sysroot location.
@@ -127,10 +108,6 @@ pub fn std_link(build: &Build,
              target);
     let libdir = build.sysroot_libdir(target_compiler, target);
     add_to_sysroot(&libdir, &libstd_stamp(build, compiler, target));
-
-    if target.contains("musl") && !target.contains("mips") {
-        copy_musl_third_party_objects(build, target, &libdir);
-    }
 
     if build.config.sanitizers && compiler.stage != 0 && target == "x86_64-apple-darwin" {
         // The sanitizers are only built in stage1 or above, so the dylibs will
