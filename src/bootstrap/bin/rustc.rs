@@ -30,7 +30,6 @@
 extern crate bootstrap;
 
 use std::env;
-use std::ffi::OsString;
 use std::io;
 use std::io::prelude::*;
 use std::str::FromStr;
@@ -111,15 +110,6 @@ fn main() {
         // linking all deps statically into the dylib.
         if env::var_os("RUSTC_NO_PREFER_DYNAMIC").is_none() {
             cmd.arg("-Cprefer-dynamic");
-        }
-
-        // Help the libc crate compile by assisting it in finding the MUSL
-        // native libraries.
-        if let Some(s) = env::var_os("MUSL_ROOT") {
-            let mut root = OsString::from("native=");
-            root.push(&s);
-            root.push("/lib");
-            cmd.arg("-L").arg(&root);
         }
 
         // Pass down extra flags, commonly used to configure `-Clinker` when

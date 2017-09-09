@@ -111,8 +111,6 @@ pub struct Config {
     pub low_priority: bool,
     pub channel: String,
     pub quiet_tests: bool,
-    // Fallback musl-root for all targets
-    pub musl_root: Option<PathBuf>,
     pub prefix: Option<PathBuf>,
     pub sysconfdir: Option<PathBuf>,
     pub docdir: Option<PathBuf>,
@@ -144,7 +142,6 @@ pub struct Target {
     pub cxx: Option<PathBuf>,
     pub ndk: Option<PathBuf>,
     pub crt_static: Option<bool>,
-    pub musl_root: Option<PathBuf>,
     pub qemu_rootfs: Option<PathBuf>,
 }
 
@@ -259,7 +256,6 @@ struct Rust {
     default_linker: Option<String>,
     default_ar: Option<String>,
     channel: Option<String>,
-    musl_root: Option<String>,
     rpath: Option<bool>,
     optimize_tests: Option<bool>,
     debuginfo_tests: Option<bool>,
@@ -277,7 +273,6 @@ struct TomlTarget {
     cxx: Option<String>,
     android_ndk: Option<String>,
     crt_static: Option<bool>,
-    musl_root: Option<String>,
     qemu_rootfs: Option<String>,
 }
 
@@ -424,7 +419,6 @@ impl Config {
             set(&mut config.ignore_git, rust.ignore_git);
             config.rustc_default_linker = rust.default_linker.clone();
             config.rustc_default_ar = rust.default_ar.clone();
-            config.musl_root = rust.musl_root.clone().map(PathBuf::from);
 
             match rust.codegen_units {
                 Some(0) => config.rust_codegen_units = num_cpus::get() as u32,
@@ -449,7 +443,6 @@ impl Config {
                 target.cxx = cfg.cxx.clone().map(PathBuf::from);
                 target.cc = cfg.cc.clone().map(PathBuf::from);
                 target.crt_static = cfg.crt_static.clone();
-                target.musl_root = cfg.musl_root.clone().map(PathBuf::from);
                 target.qemu_rootfs = cfg.qemu_rootfs.clone().map(PathBuf::from);
 
                 config.target_config.insert(INTERNER.intern_string(triple.clone()), target);
@@ -563,34 +556,6 @@ impl Config {
                 }
                 "CFG_EXPERIMENTAL_TARGETS" if value.len() > 0 => {
                     self.llvm_experimental_targets = Some(value.to_string());
-                }
-                "CFG_MUSL_ROOT" if value.len() > 0 => {
-                    self.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_X86_64" if value.len() > 0 => {
-                    let target = INTERNER.intern_str("x86_64-unknown-linux-musl");
-                    let target = self.target_config.entry(target).or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_I686" if value.len() > 0 => {
-                    let target = INTERNER.intern_str("i686-unknown-linux-musl");
-                    let target = self.target_config.entry(target).or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_ARM" if value.len() > 0 => {
-                    let target = INTERNER.intern_str("arm-unknown-linux-musleabi");
-                    let target = self.target_config.entry(target).or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_ARMHF" if value.len() > 0 => {
-                    let target = INTERNER.intern_str("arm-unknown-linux-musleabihf");
-                    let target = self.target_config.entry(target).or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
-                }
-                "CFG_MUSL_ROOT_ARMV7" if value.len() > 0 => {
-                    let target = INTERNER.intern_str("armv7-unknown-linux-musleabihf");
-                    let target = self.target_config.entry(target).or_insert(Target::default());
-                    target.musl_root = Some(parse_configure_path(value));
                 }
                 "CFG_DEFAULT_AR" if value.len() > 0 => {
                     self.rustc_default_ar = Some(value.to_string());
