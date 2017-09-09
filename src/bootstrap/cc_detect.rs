@@ -95,7 +95,7 @@ pub fn find(build: &mut Build) {
         if let Some(cc) = config.and_then(|c| c.cc.as_ref()) {
             cfg.compiler(cc);
         } else {
-            set_compiler(&mut cfg, Language::C, target, config, build);
+            set_compiler(&mut cfg, Language::C, target, config);
         }
 
         let compiler = cfg.get_compiler();
@@ -124,7 +124,7 @@ pub fn find(build: &mut Build) {
         if let Some(cxx) = config.and_then(|c| c.cxx.as_ref()) {
             cfg.compiler(cxx);
         } else {
-            set_compiler(&mut cfg, Language::CPlusPlus, host, config, build);
+            set_compiler(&mut cfg, Language::CPlusPlus, host, config);
         }
         let compiler = cfg.get_compiler();
         build.verbose(&format!("CXX_{} = {:?}", host, compiler.path()));
@@ -135,8 +135,7 @@ pub fn find(build: &mut Build) {
 fn set_compiler(cfg: &mut cc::Build,
                 compiler: Language,
                 target: Interned<String>,
-                config: Option<&Target>,
-                build: &Build) {
+                config: Option<&Target>) {
     match &*target {
         // When compiling for android we may have the NDK configured in the
         // config.toml in which case we look there. Otherwise the default
@@ -170,26 +169,6 @@ fn set_compiler(cfg: &mut cc::Build,
             let alternative = format!("e{}", gnu_compiler);
             if Command::new(&alternative).output().is_ok() {
                 cfg.compiler(alternative);
-            }
-        }
-
-        "mips-unknown-linux-musl" => {
-            if cfg.get_compiler().path().to_str() == Some("gcc") {
-                cfg.compiler("mips-linux-musl-gcc");
-            }
-        }
-        "mipsel-unknown-linux-musl" => {
-            if cfg.get_compiler().path().to_str() == Some("gcc") {
-                cfg.compiler("mipsel-linux-musl-gcc");
-            }
-        }
-
-        t if t.contains("musl") => {
-            if let Some(root) = build.musl_root(target) {
-                let guess = root.join("bin/musl-gcc");
-                if guess.exists() {
-                    cfg.compiler(guess);
-                }
             }
         }
 
