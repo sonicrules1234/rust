@@ -161,7 +161,8 @@ fn calculate_type<'a, 'tcx>(tcx: TyCtxt<'a, 'tcx, 'tcx>,
                 if sess.cstore.dep_kind(cnum).macros_only() { continue }
                 let src = sess.cstore.used_crate_source(cnum);
                 if src.rlib.is_some() { continue }
-                sess.err(&format!("dependency `{}` not found in rlib format",
+                sess.err(&format!("crate `{}` required to be available in rlib format, \
+                                  but was not found in this form",
                                   sess.cstore.crate_name(cnum)));
             }
             return Vec::new();
@@ -245,10 +246,9 @@ fn calculate_type<'a, 'tcx>(tcx: TyCtxt<'a, 'tcx, 'tcx>,
                     Linkage::Static => "rlib",
                     _ => "dylib",
                 };
-                let name = sess.cstore.crate_name(cnum);
-                sess.err(&format!("crate `{}` required to be available in {}, \
-                                  but it was not available in this form",
-                                  name, kind));
+                sess.err(&format!("crate `{}` required to be available in {} format, \
+                                  but was not found in this form",
+                                  sess.cstore.crate_name(cnum), kind));
             }
         }
     }
