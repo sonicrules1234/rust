@@ -22,9 +22,6 @@ fn main() {
         Err(_) => 0,
     };
 
-    let mut dylib_path = bootstrap::util::dylib_path();
-    dylib_path.insert(0, PathBuf::from(libdir.clone()));
-
     //FIXME(misdreavus): once stdsimd uses cfg(rustdoc) instead of cfg(dox), remove the `--cfg dox`
     //arguments here
     let mut cmd = Command::new(rustdoc);
@@ -36,7 +33,7 @@ fn main() {
         .arg("--sysroot")
         .arg(&sysroot)
         .env(bootstrap::util::dylib_path_var(),
-             env::join_paths(&dylib_path).unwrap());
+             PathBuf::from(libdir.clone()));
 
     // Force all crates compiled by this compiler to (a) be unstable and (b)
     // allow the `rustc_private` feature to link to other unstable crates
@@ -87,7 +84,7 @@ fn main() {
         eprintln!(
             "rustdoc command: {:?}={:?} {:?}",
             bootstrap::util::dylib_path_var(),
-            env::join_paths(&dylib_path).unwrap(),
+            PathBuf::from(libdir.clone()),
             cmd,
         );
         eprintln!("sysroot: {:?}", sysroot);
