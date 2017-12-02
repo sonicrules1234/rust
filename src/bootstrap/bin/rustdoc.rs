@@ -27,9 +27,6 @@ fn main() {
     let stage = env::var("RUSTC_STAGE").expect("RUSTC_STAGE was not set");
     let sysroot = env::var_os("RUSTC_SYSROOT").expect("RUSTC_SYSROOT was not set");
 
-    let mut dylib_path = bootstrap::util::dylib_path();
-    dylib_path.insert(0, PathBuf::from(libdir));
-
     let mut cmd = Command::new(rustdoc);
     cmd.args(&args)
         .arg("--cfg")
@@ -39,7 +36,7 @@ fn main() {
         .arg("--sysroot")
         .arg(sysroot)
         .env(bootstrap::util::dylib_path_var(),
-             env::join_paths(&dylib_path).unwrap());
+             PathBuf::from(libdir));
 
     // Force all crates compiled by this compiler to (a) be unstable and (b)
     // allow the `rustc_private` feature to link to other unstable crates
