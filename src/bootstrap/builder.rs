@@ -689,7 +689,7 @@ impl<'a> Builder<'a> {
 
             let cflags = self.cflags(target).join(" ");
             cargo.env(format!("CFLAGS_{}", target), cflags.clone())
-                 .env("CFLAGS", cflags.clone());
+                 .env("CFLAGS", cflags);
 
             if let Some(ar) = self.ar(target) {
                 let ranlib = format!("{} s", ar.display());
@@ -701,9 +701,7 @@ impl<'a> Builder<'a> {
 
             if let Ok(cxx) = self.cxx(target) {
                 cargo.env(format!("CXX_{}", target), cxx)
-                     .env("CXX", cxx)
-                     .env(format!("CXXFLAGS_{}", target), cflags.clone())
-                     .env("CXXFLAGS", cflags);
+                     .env("CXX", cxx);
             }
         }
 
