@@ -1124,8 +1124,7 @@ impl<'a> Builder<'a> {
             if let Ok(cxx) = self.cxx(target) {
                 let cxx = ccacheify(&cxx);
                 cargo
-                    .env(format!("CXX_{}", target), &cxx)
-                    .env(format!("CXXFLAGS_{}", target), cflags);
+                    .env(format!("CXX_{}", target), &cxx);
             }
         }
 
