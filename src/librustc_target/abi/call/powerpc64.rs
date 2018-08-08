@@ -19,7 +19,7 @@ use spec::HasTargetSpec;
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum ABI {
     ELFv1, // original ABI used for powerpc64 (big-endian)
-    ELFv2, // newer ABI used for powerpc64le
+    ELFv2, // newer ABI used for powerpc64le and musl (both endians)
 }
 use self::ABI::*;
 
