@@ -637,6 +637,7 @@ impl Step for Openssl {
             "powerpc-unknown-linux-musl" => "linux-ppc",
             "powerpc-unknown-netbsd" => "BSD-generic32",
             "powerpc64-unknown-linux-gnu" => "linux-ppc64",
+            "powerpc64-unknown-linux-musl" => "linux-ppc64",
             "powerpc64le-unknown-linux-gnu" => "linux-ppc64le",
             "powerpc64le-unknown-linux-musl" => "linux-ppc64le",
             "s390x-unknown-linux-gnu" => "linux64-s390x",
@@ -663,6 +664,10 @@ impl Step for Openssl {
         if target == "aarch64-linux-android" || target == "x86_64-linux-android" {
             configure.arg("-mandroid");
             configure.arg("-fomit-frame-pointer");
+        }
+        // OpenSSL ships incompatible ELFv1 ABI assembly code
+        if target == "powerpc64-unknown-linux-musl" {
+            configure.arg("no-asm");
         }
         if target == "sparc64-unknown-netbsd" {
             // Need -m64 to get assembly generated correctly for sparc64.
