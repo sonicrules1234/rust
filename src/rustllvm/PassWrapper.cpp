@@ -399,6 +399,11 @@ extern "C" LLVMTargetMachineRef LLVMRustCreateTargetMachine(
     Options.ThreadModel = ThreadModel::Single;
   }
 
+  if (Trip.getArch() == llvm::Triple::ArchType::ppc64 &&
+      Trip.getEnvironment() == llvm::Triple::EnvironmentType::Musl) {
+    Options.MCOptions.ABIName = "elfv2";
+  }
+
 #if LLVM_VERSION_GE(6, 0)
   Optional<CodeModel::Model> CM;
 #else
