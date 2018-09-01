@@ -648,6 +648,10 @@ impl Step for Openssl {
             configure.arg("-mandroid");
             configure.arg("-fomit-frame-pointer");
         }
+        if target == "powerpc64-unknown-linux-musl" {
+            // OpenSSL ships ELFv1 assembly files
+            configure.arg("no-asm");
+        }
         if target == "sparc64-unknown-netbsd" {
             // Need -m64 to get assembly generated correctly for sparc64.
             configure.arg("-m64");
