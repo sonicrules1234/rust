@@ -903,44 +903,7 @@ impl Build {
             return s
         }
 
-        let beta = output(
-            Command::new("git")
-                .arg("ls-remote")
-                .arg("origin")
-                .arg("beta")
-                .current_dir(&self.src)
-        );
-        let beta = beta.trim().split_whitespace().next().unwrap();
-        let master = output(
-            Command::new("git")
-                .arg("ls-remote")
-                .arg("origin")
-                .arg("master")
-                .current_dir(&self.src)
-        );
-        let master = master.trim().split_whitespace().next().unwrap();
-
-        // Figure out where the current beta branch started.
-        let base = output(
-            Command::new("git")
-                .arg("merge-base")
-                .arg(beta)
-                .arg(master)
-                .current_dir(&self.src),
-        );
-        let base = base.trim();
-
-        // Next figure out how many merge commits happened since we branched off
-        // beta. That's our beta number!
-        let count = output(
-            Command::new("git")
-                .arg("rev-list")
-                .arg("--count")
-                .arg("--merges")
-                .arg(format!("{}...HEAD", base))
-                .current_dir(&self.src),
-        );
-        let n = count.trim().parse().unwrap();
+        let n = 0;
         self.prerelease_version.set(Some(n));
         n
     }
