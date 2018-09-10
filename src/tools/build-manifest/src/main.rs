@@ -86,6 +86,7 @@ static TARGETS: &'static [&'static str] = &[
     "mipsel-unknown-linux-musl",
     "powerpc-unknown-linux-gnu",
     "powerpc-unknown-linux-gnuspe",
+    "powerpc-unknown-linux-musl",
     "powerpc64-unknown-linux-gnu",
     "powerpc64le-unknown-linux-gnu",
     "powerpc64le-unknown-linux-musl",

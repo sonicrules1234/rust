@@ -634,6 +634,7 @@ impl Step for Openssl {
             "mipsel-unknown-linux-musl" => "linux-mips32",
             "powerpc-unknown-linux-gnu" => "linux-ppc",
             "powerpc-unknown-linux-gnuspe" => "linux-ppc",
+            "powerpc-unknown-linux-musl" => "linux-ppc",
             "powerpc-unknown-netbsd" => "BSD-generic32",
             "powerpc64-unknown-linux-gnu" => "linux-ppc64",
             "powerpc64le-unknown-linux-gnu" => "linux-ppc64le",
