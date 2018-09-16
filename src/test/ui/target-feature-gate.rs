@@ -10,6 +10,8 @@
 
 // ignore-arm
 // ignore-aarch64
+// ignore-powerpc
+// ignore-powerpc64
 // ignore-wasm
 // ignore-emscripten
 // gate-test-sse4a_target_feature
