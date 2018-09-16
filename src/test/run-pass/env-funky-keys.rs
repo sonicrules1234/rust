@@ -1,5 +1,6 @@
 // Ignore this test on Android, because it segfaults there.
 
+// ignore-test
 // ignore-android
 // ignore-windows
 // ignore-cloudabi no execve
