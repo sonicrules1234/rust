@@ -21,15 +21,15 @@
 
 // gdb-command:print case1
 // gdbg-check:$1 = {{RUST$ENUM$DISR = Case1, __0 = 0, __1 = 31868, __2 = 31868, __3 = 31868, __4 = 31868}, {RUST$ENUM$DISR = Case1, [...]}, {RUST$ENUM$DISR = Case1, [...]}}
-// gdbr-check:$1 = generic_tuple_style_enum::Regular::Case1(0, 31868, 31868, 31868, 31868)
+// gdbr-check:$1 = generic_tuple_style_enum::Regular<u16, u32, u64>::Case1(0, 31868, 31868, 31868, 31868)
 
 // gdb-command:print case2
 // gdbg-check:$2 = {{RUST$ENUM$DISR = Case2, [...]}, {RUST$ENUM$DISR = Case2, __0 = 0, __1 = 286331153, __2 = 286331153}, {RUST$ENUM$DISR = Case2, [...]}}
-// gdbr-check:$2 = generic_tuple_style_enum::Regular::Case2(0, 286331153, 286331153)
+// gdbr-check:$2 = generic_tuple_style_enum::Regular<i16, i32, i64>::Case2(0, 286331153, 286331153)
 
 // gdb-command:print case3
 // gdbg-check:$3 = {{RUST$ENUM$DISR = Case3, [...]}, {RUST$ENUM$DISR = Case3, [...]}, {RUST$ENUM$DISR = Case3, __0 = 0, __1 = 6438275382588823897}}
-// gdbr-check:$3 = generic_tuple_style_enum::Regular::Case3(0, 6438275382588823897)
+// gdbr-check:$3 = generic_tuple_style_enum::Regular<i16, i32, i64>::Case3(0, 6438275382588823897)
 
 // gdb-command:print univariant
 // gdbg-check:$4 = {{__0 = -1}}
