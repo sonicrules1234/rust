@@ -8,6 +8,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+// compile-flags: -C link-arg=-Wl,--export-dynamic
+
 #![feature(rustc_private)]
 
 // We're testing linkage visibility; the compiler warns us, but we want to
