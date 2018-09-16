@@ -10,7 +10,7 @@
 
 // LLDB can't handle zero-sized values
 // ignore-lldb
-
+// ignore-test
 
 // compile-flags:-g
 // gdb-command:run
