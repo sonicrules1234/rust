@@ -414,6 +414,13 @@ supported_targets! {
     ("riscv32imac-unknown-none-elf", riscv32imac_unknown_none_elf),
 
     ("aarch64-unknown-none", aarch64_unknown_none),
+
+    ("aarch64-foxkit-linux-musl", aarch64_foxkit_linux_musl),
+    ("armv7-foxkit-linux-musleabihf", armv7_foxkit_linux_musleabihf),
+    ("i586-foxkit-linux-musl", i586_foxkit_linux_musl),
+    ("powerpc-foxkit-linux-musl", powerpc_foxkit_linux_musl),
+    ("powerpc64-foxkit-linux-musl", powerpc64_foxkit_linux_musl),
+    ("x86_64-foxkit-linux-musl", x86_64_foxkit_linux_musl),
 }
 
 /// Everything `rustc` knows about how to compile for a specific target.
