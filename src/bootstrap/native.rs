@@ -652,6 +652,12 @@ impl Step for Openssl {
             "x86_64-unknown-linux-gnux32" => "linux-x32",
             "x86_64-unknown-linux-musl" => "linux-x86_64",
             "x86_64-unknown-netbsd" => "BSD-x86_64",
+            "aarch64-foxkit-linux-musl" => "linux-aarch64",
+            "armv7-foxkit-linux-musleabihf" => "linux-armv4",
+            "i586-foxkit-linux-musl" => "linux-elf",
+            "powerpc-foxkit-linux-musl" => "linux-ppc",
+            "powerpc64-foxkit-linux-musl" => "linux-ppc64",
+            "x86_64-foxkit-linux-musl" => "linux-x86_64",
             _ => panic!("don't know how to configure OpenSSL for {}", target),
         };
         configure.arg(os);
@@ -666,7 +672,7 @@ impl Step for Openssl {
             configure.arg("-fomit-frame-pointer");
         }
         // OpenSSL ships incompatible ELFv1 ABI assembly code
-        if target == "powerpc64-unknown-linux-musl" {
+        if target == "powerpc64-unknown-linux-musl" || target == "powerpc64-foxkit-linux-musl" {
             configure.arg("no-asm");
         }
         if target == "sparc64-unknown-netbsd" {
@@ -681,7 +687,7 @@ impl Step for Openssl {
         // Make PIE binaries
         // Non-PIE linker support was removed in Lollipop
         // https://source.android.com/security/enhancements/enhancements50
-        if target == "i686-linux-android" {
+        if target == "i686-linux-android" || target == "i586-foxkit-linux-musl" {
             configure.arg("no-asm");
         }
         configure.current_dir(&obj);
