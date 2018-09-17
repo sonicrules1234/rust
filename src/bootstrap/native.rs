@@ -685,6 +685,11 @@ impl Step for Openssl {
             "x86_64-unknown-linux-gnux32" => "linux-x32",
             "x86_64-unknown-linux-musl" => "linux-x86_64",
             "x86_64-unknown-netbsd" => "BSD-x86_64",
+            "aarch64-gentoo-linux-musl" => "linux-aarch64",
+            "armv7a-unknown-linux-musleabihf" => "linux-armv4",
+            "i686-gentoo-linux-musl" => "linux-elf",
+            "powerpc-gentoo-linux-musl" => "linux-ppc",
+            "x86_64-gentoo-linux-musl" => "linux-x86_64",
             _ => panic!("don't know how to configure OpenSSL for {}", target),
         };
         configure.arg(os);
@@ -714,7 +719,7 @@ impl Step for Openssl {
         // Make PIE binaries
         // Non-PIE linker support was removed in Lollipop
         // https://source.android.com/security/enhancements/enhancements50
-        if target == "i686-linux-android" {
+        if target == "i686-linux-android" || target == "i686-gentoo-linux-musl" {
             configure.arg("no-asm");
         }
         configure.current_dir(&obj);
