@@ -46,8 +46,8 @@ mod imp {
         pub const F_RDLCK: libc::c_short = 0;
         pub const F_WRLCK: libc::c_short = 1;
         pub const F_UNLCK: libc::c_short = 2;
-        pub const F_SETLK: libc::c_int = 6;
-        pub const F_SETLKW: libc::c_int = 7;
+        pub const F_SETLK: libc::c_int = libc::F_SETLK;
+        pub const F_SETLKW: libc::c_int = libc::F_SETLKW;
     }
 
     #[cfg(target_os = "freebsd")]
