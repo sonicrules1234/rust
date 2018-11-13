@@ -689,6 +689,7 @@ impl Step for Openssl {
             "armv7a-unknown-linux-musleabihf" => "linux-armv4",
             "i686-gentoo-linux-musl" => "linux-elf",
             "powerpc-gentoo-linux-musl" => "linux-ppc",
+            "powerpc64-linux-musl" => "linux-ppc64",
             "x86_64-gentoo-linux-musl" => "linux-x86_64",
             _ => panic!("don't know how to configure OpenSSL for {}", target),
         };
@@ -704,7 +705,7 @@ impl Step for Openssl {
             configure.arg("-fomit-frame-pointer");
         }
         // OpenSSL ships incompatible ELFv1 ABI assembly code
-        if target == "powerpc64-unknown-linux-musl" {
+        if target == "powerpc64-unknown-linux-musl" || target == "powerpc64-linux-musl" {
             configure.arg("no-asm");
         }
         if target == "sparc64-unknown-netbsd" {

@@ -421,6 +421,7 @@ supported_targets! {
     ("armv7a-unknown-linux-musleabihf", armv7a_gentoo_linux_musleabihf),
     ("i686-gentoo-linux-musl", i686_gentoo_linux_musl),
     ("powerpc-gentoo-linux-musl", powerpc_gentoo_linux_musl),
+    ("powerpc64-linux-musl", powerpc64_linux_musl),
     ("x86_64-gentoo-linux-musl", x86_64_gentoo_linux_musl),
 }
 
