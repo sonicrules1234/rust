@@ -562,7 +562,7 @@ impl<'a, Ty> FnType<'a, Ty> {
             "arm" => arm::compute_abi_info(cx, self),
             "mips" => mips::compute_abi_info(cx, self),
             "mips64" => mips64::compute_abi_info(cx, self),
-            "powerpc" => powerpc::compute_abi_info(cx, self),
+            "powerpc" => powerpc::compute_abi_info(self),
             "powerpc64" => powerpc64::compute_abi_info(cx, self),
             "s390x" => s390x::compute_abi_info(cx, self),
             "asmjs" => asmjs::compute_abi_info(cx, self),
