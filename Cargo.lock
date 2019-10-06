@@ -3036,6 +3036,7 @@ dependencies = [
  "failure",
  "mdbook",
  "mdbook-linkcheck",
+ "rustc-workspace-hack",
 ]
 
 [[package]]
