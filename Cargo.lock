@@ -2577,6 +2577,7 @@ dependencies = [
  "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "mdbook 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "mdbook-linkcheck 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-workspace-hack 1.0.0",
 ]
 
 [[package]]
