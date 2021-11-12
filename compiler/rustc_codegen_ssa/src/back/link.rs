@@ -2033,7 +2033,7 @@ fn add_upstream_native_libraries(
                     // an upstream rlib was originally linked against a native shared library.
                     if crate_type == config::CrateType::Executable
                         && sess.crt_static(Some(crate_type))
-                        && !sess.target.target.options.crt_static_allows_dylibs
+                        && !sess.target.options.crt_static_allows_dylibs
                     {
                         cmd.link_staticlib(name)
                     } else {
